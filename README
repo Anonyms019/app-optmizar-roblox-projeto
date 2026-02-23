@@ -1,1 +1,7 @@
+# Roblox Optimizer
+Um app externo para otimizar o desempenho do Roblox no Windows.
 
+## Instalação
+```bash
+pip install -r requirements.txt
+python main.py
