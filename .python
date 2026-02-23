@@ -1,18 +1,39 @@
-from utils.cleanup import clear_temp_files
-from utils.settings import optimize_graphics
-from utils.monitor import monitor_performance
+# roblox_optimizer.py
+import json
+
+def otimizar_modelo(modelo):
+    """Remove partes invisíveis e duplicadas do modelo Roblox"""
+    partes_visiveis = [p for p in modelo.get("partes", []) if p.get("visivel", True)]
+    
+    nomes_vistos = set()
+    partes_otimizadas = []
+    for p in partes_visiveis:
+        if p["nome"] not in nomes_vistos:
+            partes_otimizadas.append(p)
+            nomes_vistos.add(p["nome"])
+    
+    modelo_otimizado = modelo.copy()
+    modelo_otimizado["partes"] = partes_otimizadas
+    return modelo_otimizado
 
 def main():
-    print("Iniciando Roblox Optimizer...")
+    print("=== Otimizador de Roblox ===")
+    caminho = input("Digite o caminho do arquivo JSON do modelo: ")
     
-    # Limpar arquivos temporários
-    clear_temp_files()
+    try:
+        with open(caminho, "r") as f:
+            modelo = json.load(f)
+    except Exception as e:
+        print(f"Erro ao abrir arquivo: {e}")
+        return
     
-    # Ajustar configurações gráficas
-    optimize_graphics()
+    otimizado = otimizar_modelo(modelo)
     
-    # Monitorar desempenho
-    monitor_performance()
+    saida = caminho.replace(".json", "_otimizado.json")
+    with open(saida, "w") as f:
+        json.dump(otimizado, f, indent=4)
+    
+    print(f"Modelo otimizado salvo em: {saida}")
 
 if __name__ == "__main__":
     main()
